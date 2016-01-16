@@ -31,6 +31,7 @@
     frictionY: 0.1,
     originX: 0.5,
     originY: 0.5
+	tilty: false,
   };
 
   function Parallax(element, options) {
@@ -52,7 +53,8 @@
       frictionX: this.data(this.element, 'friction-x'),
       frictionY: this.data(this.element, 'friction-y'),
       originX: this.data(this.element, 'origin-x'),
-      originY: this.data(this.element, 'origin-y')
+      originY: this.data(this.element, 'origin-y'),
+			tilt: this.data(this.element, 'tilty')
     };
 
     // Delete Null Data Values
@@ -100,6 +102,10 @@
     // Velocity
     this.vx = 0;
     this.vy = 0;
+		
+		//Tilty
+		this.tiltx = 0;
+		this.tilty = 0;
 
     // Callbacks
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -377,6 +383,15 @@
       element.style.top = y;
     }
   };
+  
+  Parallax.prototype.setTilt = function(element, tiltx, tilty) {
+		if (this.transform3DSupport) {
+			var style = window.getComputedStyle(this);
+			var transform = style.transform;
+			var transy = transform + ' rotateX('+tiltx+') rotateY('+tilty+')';
+			this.css(element, 'transform', transy);
+		}
+  }
 
   Parallax.prototype.onOrientationTimer = function(event) {
     if (this.orientationSupport && this.orientationStatus === 0) {
@@ -418,12 +433,19 @@
     }
     this.vx += (this.mx - this.vx) * this.frictionX;
     this.vy += (this.my - this.vy) * this.frictionY;
+		
+		this.tiltx += ( this.mx - this.tiltx ) * this.frictionX;
+		this.tilty += ( this.mx - this.tilty ) * this.frictionY;
+		
     for (var i = 0, l = this.layers.length; i < l; i++) {
       var layer = this.layers[i];
       var depth = this.depths[i];
       var xOffset = this.vx * depth * (this.invertX ? -1 : 1);
       var yOffset = this.vy * depth * (this.invertY ? -1 : 1);
       this.setPosition(layer, xOffset, yOffset);
+			if (this.tilt) {
+				this.setTilt(layer, txOffset, tyOffset);
+			}
     }
     this.raf = requestAnimationFrame(this.onAnimationFrame);
   };
