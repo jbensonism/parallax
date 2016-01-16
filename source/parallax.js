@@ -54,7 +54,7 @@
       frictionY: this.data(this.element, 'friction-y'),
       originX: this.data(this.element, 'origin-x'),
       originY: this.data(this.element, 'origin-y'),
-      tilt: this.data(this.element, 'tilt')
+			tilt: this.data(this.element, 'tilt')
     };
 
     // Delete Null Data Values
@@ -389,7 +389,6 @@
   Parallax.prototype.setTilt = function(element, tiltx, tilty) {
 		tiltx += 'deg';
 		tilty += 'deg';
-		// console.log(tiltx);
 		if (this.transform3DSupport) {
 			var style = window.getComputedStyle(element);
 			var transform = style.transform;
@@ -442,9 +441,6 @@
 		
 		this.tiltx += ( this.mx - this.tiltx ) * this.frictionX;
 		this.tilty += ( this.my - this.tilty ) * this.frictionY;
-		
-		console.log('tiltx: '+this.tiltx);
-		console.log('tilty: '+this.tilty);
 		
     for (var i = 0, l = this.layers.length; i < l; i++) {
       var layer = this.layers[i];
