@@ -31,7 +31,7 @@
     frictionY: 0.1,
     originX: 0.5,
     originY: 0.5
-	tilty: false,
+		tilt: false,
   };
 
   function Parallax(element, options) {
