@@ -30,8 +30,8 @@
     frictionX: 0.1,
     frictionY: 0.1,
     originX: 0.5,
-    originY: 0.5
-		tilt: false,
+    originY: 0.5,
+		tilt: false
   };
 
   function Parallax(element, options) {
@@ -295,6 +295,7 @@
       }
       window.addEventListener('resize', this.onWindowResize);
       this.raf = requestAnimationFrame(this.onAnimationFrame);
+			
     }
   };
 
@@ -368,7 +369,8 @@
   Parallax.prototype.accelerate = function(element) {
     this.css(element, 'transform', 'translate3d(0,0,0)');
     this.css(element, 'transform-style', 'preserve-3d');
-    this.css(element, 'backface-visibility', 'hidden');
+    // this.css(element, 'transform-style', 'flat');
+    this.css(element, 'backface-visibility', 'visible');
   };
 
   Parallax.prototype.setPosition = function(element, x, y) {
@@ -385,8 +387,11 @@
   };
   
   Parallax.prototype.setTilt = function(element, tiltx, tilty) {
+		tiltx += 'deg';
+		tilty += 'deg';
+		// console.log(tiltx);
 		if (this.transform3DSupport) {
-			var style = window.getComputedStyle(this);
+			var style = window.getComputedStyle(element);
 			var transform = style.transform;
 			var transy = transform + ' rotateX('+tiltx+') rotateY('+tilty+')';
 			this.css(element, 'transform', transy);
@@ -413,6 +418,7 @@
     this.updateBounds();
     var dx = this.ix - this.cx;
     var dy = this.iy - this.cy;
+		
     if ((Math.abs(dx) > this.calibrationThreshold) || (Math.abs(dy) > this.calibrationThreshold)) {
       this.queueCalibration(0);
     }
@@ -435,13 +441,20 @@
     this.vy += (this.my - this.vy) * this.frictionY;
 		
 		this.tiltx += ( this.mx - this.tiltx ) * this.frictionX;
-		this.tilty += ( this.mx - this.tilty ) * this.frictionY;
+		this.tilty += ( this.my - this.tilty ) * this.frictionY;
+		
+		console.log('tiltx: '+this.tiltx);
+		console.log('tilty: '+this.tilty);
 		
     for (var i = 0, l = this.layers.length; i < l; i++) {
       var layer = this.layers[i];
       var depth = this.depths[i];
       var xOffset = this.vx * depth * (this.invertX ? -1 : 1);
       var yOffset = this.vy * depth * (this.invertY ? -1 : 1);
+			
+			var txOffset = this.tiltx * (depth * 2);
+			var tyOffset = this.tilty * (depth * 2);
+			
       this.setPosition(layer, xOffset, yOffset);
 			if (this.tilt) {
 				this.setTilt(layer, txOffset, tyOffset);
