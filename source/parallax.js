@@ -31,7 +31,7 @@
     frictionY: 0.1,
     originX: 0.5,
     originY: 0.5
-		tilt: false,
+    tilt: false,
   };
 
   function Parallax(element, options) {
@@ -54,7 +54,7 @@
       frictionY: this.data(this.element, 'friction-y'),
       originX: this.data(this.element, 'origin-x'),
       originY: this.data(this.element, 'origin-y'),
-			tilt: this.data(this.element, 'tilty')
+      tilt: this.data(this.element, 'tilty')
     };
 
     // Delete Null Data Values
